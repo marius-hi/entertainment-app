@@ -15,19 +15,25 @@
         <mat-form-field appearance="outline">
           <mat-label>TMDB Token</mat-label>
           <textarea matInput [errorStateMatcher]="matcher" formControlName="token" rows="5" cols="120"></textarea>
-          <mat-error *ngIf="token?.hasError('required')">
-            Token is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="token?.hasError('invalidToken') && !token?.hasError('required')">
-            Fail to validate the token! {{ token?.getError('invalidToken') }}
-          </mat-error>
+          @if(token?.hasError('required')){
+            <mat-error>Token is <strong>required</strong></mat-error>
+          }
+          @if(token?.hasError('invalidToken') && !token?.hasError('required')){
+            <mat-error>
+              Fail to validate the token! {{ token?.getError('invalidToken') }}
+            </mat-error>
+          }
         </mat-form-field>
-        <div *ngIf="hasValidToken" class="alert alert-success" role="alert">
-          The application has been successfully connected to TMDB. <a [routerLink]="['/']">Return to the application</a>
-        </div>
+        @if(hasValidToken && !busy && !token?.hasError('invalidToken') && !token?.hasError('required')){
+          <div class="alert alert-success" role="alert">
+            The application has been successfully connected to TMDB. <a [routerLink]="['/']">Return to the application</a>
+          </div>
+        }
         <mat-card-actions>
           <button [disabled]="!wizardForm.valid || busy" color="primary" mat-raised-button type="submit">
-            <mat-spinner *ngIf="busy" diameter="15"></mat-spinner>
+            @if(busy){
+              <mat-spinner diameter="15"></mat-spinner>
+            }
             Save & Continue
           </button>
         </mat-card-actions>

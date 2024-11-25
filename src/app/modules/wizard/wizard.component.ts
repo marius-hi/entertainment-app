@@ -7,7 +7,6 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle
 import { Router, RouterLink } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
 import { IValidateTokenErrorResponse, IValidateTokenResponse, WizardDataService } from './wizard-data.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { AuthService } from '../../shared/services/auth.service';
@@ -21,7 +20,6 @@ interface IWizardForm {
 @Component({
   selector: 'wizard',
   imports: [
-    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,

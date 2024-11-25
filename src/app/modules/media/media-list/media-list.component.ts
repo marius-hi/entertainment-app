@@ -9,8 +9,7 @@ import { IMediaItem } from '../media.service';
     MediaItemComponent
   ],
   standalone: true,
-  templateUrl: './media-list.component.html',
-  styleUrl: './media-list.component.scss'
+  templateUrl: './media-list.component.html'
 })
 export class MediaListComponent {
   @Input() public items!:IMediaItem[];

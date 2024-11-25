@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
-import { APP_NAME } from '../../../app.settings';
+import { APP_NAME, MediaType } from '../../../app.settings';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 
@@ -18,6 +18,7 @@ import { SearchBoxComponent } from '../search-box/search-box.component';
 })
 export class HeaderNavigationComponent implements OnChanges {
   @Input() public searchTerm?:string;
+  @Input() public mediaType!:MediaType;
 
   public appTitle:string = APP_NAME;
   protected readonly faKey:IconDefinition = faKey;

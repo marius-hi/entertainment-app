@@ -2,36 +2,33 @@ import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core'
 import { IMediaResponseData, IMediaResponseItem, MediaDataService } from '../media-data.service';
 import { finalize, map, Observable } from 'rxjs';
 import { MediaListComponent } from '../media-list/media-list.component';
-import { MediaType } from '../../../app.settings';
+import { MediaType, SCROLL_DISTANCE, SCROLL_THROTTLE } from '../../../app.settings';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { CommonModule } from '@angular/common';
 import { IMediaItem, MediaService } from '../media.service';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'top-rated-media',
   imports: [
-    CommonModule,
     MediaListComponent,
     InfiniteScrollDirective,
-    MatProgressSpinner
+    LoadingSpinnerComponent
   ],
   providers: [
     MediaService,
     MediaDataService
   ],
   templateUrl: './top-rated-media.component.html',
-  standalone: true,
-  styleUrl: './top-rated-media.component.scss'
+  standalone: true
 })
 export class TopRatedMediaComponent implements OnInit {
   @Input() public mediaType!:MediaType;
   public mediaItems:IMediaItem[] = [];
-  public loading:boolean = false;
-  public scrollDistance:number = 1;
-  public throttle:number = 500;
-  private page:WritableSignal<number> = signal(1);
   private mediaItemsBuffer:IMediaItem[] = [];
+  public loading:WritableSignal<boolean> = signal(false);
+  private page:WritableSignal<number> = signal(1);
+  public scrollDistance:number = SCROLL_DISTANCE;
+  public throttle:number = SCROLL_THROTTLE;
 
   constructor(
     private mediaService:MediaService,
@@ -43,10 +40,10 @@ export class TopRatedMediaComponent implements OnInit {
   }
 
   private loadTopRatedMedia(page?:number):void {
-    this.loading = true;
+    this.loading.set(true);
     const getRatedSubscription:Observable<IMediaResponseData> = this.mediaDataService.getTopRated(this.mediaType, page)
       .pipe(finalize(() => {
-        this.loading = false;
+        this.loading.set(false);
       }));
 
     // take the first 10 media results

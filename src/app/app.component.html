@@ -1,8 +1,9 @@
 @if (!isWizard) {
-  <header-navigation [searchTerm]="searchTerm"></header-navigation>
+  <header-navigation [mediaType]="mediaType" [searchTerm]="searchTerm"></header-navigation>
 }
-
 <main>
-  <search-results [searchTerm]="searchTerm"></search-results>
-  <router-outlet *ngIf="!searchTerm" />
+  <search-results [mediaType]="mediaType" [searchTerm]="searchTerm"></search-results>
+  @if (!searchTerm) {
+    <router-outlet />
+  }
 </main>

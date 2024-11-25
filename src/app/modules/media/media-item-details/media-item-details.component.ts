@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { MediaType } from '../../../app.settings';
 import { finalize } from 'rxjs';
 import { IMediaItem, MediaService } from '../media.service';
 import { MediaItemComponent } from '../media-item/media-item.component';
 import { IMediaResponseItemDetails, MediaDataService } from '../media-data.service';
-import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'media-item-details',
@@ -15,16 +15,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   templateUrl: './media-item-details.component.html',
   imports: [
-    CommonModule,
-    MediaItemComponent
-  ],
-  styleUrl: './media-item-details.component.scss'
+    MediaItemComponent,
+    LoadingSpinnerComponent
+  ]
 })
 export class MediaItemDetailsComponent implements OnInit {
   @Input() mediaType!:MediaType;
   @Input() id!:number;
   public mediaItem?:IMediaItem;
-  public loading?:boolean;
+  public loading:WritableSignal<boolean> = signal(false);
 
   constructor(
     private mediaService:MediaService,
@@ -32,10 +31,10 @@ export class MediaItemDetailsComponent implements OnInit {
   ) {}
 
   public ngOnInit():void {
-    this.loading = true;
+    this.loading.set(true);
     this.mediaDataService.getDetails(this.mediaType, this.id)
       .pipe(finalize(() => {
-        this.loading = false;
+        this.loading.set(false);
       }))
       .subscribe({
         next: (mediaDetails:IMediaResponseItemDetails) => {

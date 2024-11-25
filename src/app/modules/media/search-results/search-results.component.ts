@@ -1,48 +1,54 @@
-import { Component, Input, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Router } from '@angular/router';
 import { finalize, map, Observable } from 'rxjs';
 import { IMediaResponseData, IMediaResponseItem, MediaDataService } from '../media-data.service';
-import { MediaType } from '../../../app.settings';
+import { MediaType, SCROLL_DISTANCE, SCROLL_THROTTLE } from '../../../app.settings';
 import { IMediaItem, MediaService } from '../media.service';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MediaListComponent } from '../media-list/media-list.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'search-results',
   imports: [
-    CommonModule,
     InfiniteScrollDirective,
-    MatProgressSpinner,
-    MediaListComponent
+    MediaListComponent,
+    LoadingSpinnerComponent
   ],
   providers: [
     MediaService,
     MediaDataService
   ],
   standalone: true,
-  templateUrl: './search-results.component.html',
-  styleUrl: './search-results.component.scss'
+  templateUrl: './search-results.component.html'
 })
-export class SearchResultsComponent implements OnInit, OnChanges {
+export class SearchResultsComponent implements OnChanges {
+  @Input() mediaType!:MediaType;
   @Input() searchTerm?:string;
 
   public mediaItems:IMediaItem[] = [];
-  public loading:boolean = false;
-  public scrollDistance:number = 1;
-  public throttle:number = 500;
-  public mediaType!:MediaType;
+  public loading:WritableSignal<boolean> = signal(false);
   private page:WritableSignal<number> = signal(1);
+  public scrollDistance:number = SCROLL_DISTANCE;
+  public throttle:number = SCROLL_THROTTLE;
 
   constructor(
-    private activatedRoute:ActivatedRoute,
     private router:Router,
     private mediaService:MediaService,
     private mediaDataService:MediaDataService
   ) {}
 
   public ngOnChanges(changes:SimpleChanges) {
+    // when there is a search term and media type changes -> perform a new search with the new media type
+    if (changes['mediaType']) {
+      this.mediaType = changes['mediaType'].currentValue;
+      if(changes['mediaType'].previousValue && changes['mediaType'].previousValue !== changes['mediaType'].currentValue) {
+        this.mediaItems = [];
+        this.startSearch();
+      }
+    }
+
+    // perform a new search when the search term changes
     if (changes['searchTerm']) {
       this.searchTerm = changes['searchTerm'].currentValue;
       this.mediaItems = []; // clear previous items
@@ -53,30 +59,11 @@ export class SearchResultsComponent implements OnInit, OnChanges {
     }
   }
 
-  public ngOnInit():void {
-    // fetch the type of media that is rendered and determine if is changed
-    this.router.events
-      .subscribe((event) => {
-        if (event instanceof ActivationEnd) {
-          if(event?.snapshot?.data['mediaType']){
-            const mediaTypeChanged:boolean = event?.snapshot?.data['mediaType'] !== this.mediaType;
-            this.mediaType = event?.snapshot?.data['mediaType'];
-            // when changing the media type, perform a new search with the same query search term
-            if(mediaTypeChanged && this.searchTerm){
-              this.mediaItems = [];
-              this.startSearch();
-            }
-            this.mediaType = event?.snapshot?.data['mediaType'];
-          }
-        }
-      });
-  }
-
   private startSearch(page?:number):void {
-    this.loading = true;
-    const searchSubscription:Observable<IMediaResponseData> = this.mediaDataService.searchMedia(this.searchTerm?.trim() || '', this.mediaType, page) // this.mediaType
+    this.loading.set(true);
+    const searchSubscription:Observable<IMediaResponseData> = this.mediaDataService.searchMedia(this.searchTerm?.trim() || '', this.mediaType, page)
       .pipe(finalize(() => {
-        this.loading = false;
+        this.loading.set(false);
       }));
 
     searchSubscription

@@ -1,43 +1,52 @@
-<div class="container mt-5" *ngIf="!loading">
-  <h4>Details</h4>
-  <div class="row">
-    <div class="col-md-4">
-      <media-item [item]="mediaItem"></media-item>
-    </div>
-    <div class="col-md-8">
-      <p>
-        <span class="fw-bold">Description</span>: {{ mediaItem?.description }}
-      </p>
+@if (!loading()) {
+  <div class="container mt-5">
+    <h4>Details</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <media-item [item]="mediaItem"></media-item>
+      </div>
+      <div class="col-md-8">
+        <p>
+          <span class="fw-bold">Description</span>: {{ mediaItem?.description }}
+        </p>
+        @if (mediaItem?.length) {
+          <span class="fw-bold">Length</span>: {{ mediaItem?.length }}
+        }
 
-      <p *ngIf="mediaItem?.length">
-        <span class="fw-bold">Length</span>: {{ mediaItem?.length }}
-      </p>
+        <p>
+          <span class="fw-bold">Votes</span>: {{ mediaItem?.votes }}
+        </p>
 
-      <p>
-        <span class="fw-bold">Votes</span>: {{ mediaItem?.votes }}
-      </p>
+        <p>
+          <span class="fw-bold">Popularity</span>: {{ mediaItem?.popularity }}
+        </p>
 
-      <p>
-        <span class="fw-bold">Popularity</span>: {{ mediaItem?.popularity }}
-      </p>
+        <p>
+          <span class="fw-bold">Language</span>: {{ mediaItem?.language }}
+        </p>
 
-      <p>
-        <span class="fw-bold">Language</span>: {{ mediaItem?.language }}
-      </p>
+        @if (mediaItem?.episodes) {
+          <p>
+            <span class="fw-bold">Episodes</span>: {{ mediaItem?.episodes }}
+          </p>
+        }
 
+        @if (mediaItem?.seasons) {
+          <p>
+            <span class="fw-bold">Seasons</span>: {{ mediaItem?.seasons }}
+          </p>
+        }
 
-      <p *ngIf="mediaItem?.episodes">
-        <span class="fw-bold">Episodes</span>: {{ mediaItem?.episodes }}
-      </p>
+        @if (mediaItem?.genres?.length) {
+          <p>
+            <span class="fw-bold">Genres</span>: @for (genre of mediaItem?.genres; track genre.id){ <br /> {{ genre.name }} }
+          </p>
+        }
 
-      <p *ngIf="mediaItem?.seasons">
-        <span class="fw-bold">Seasons</span>: {{ mediaItem?.seasons }}
-      </p>
-
-      <p *ngIf="mediaItem?.genres?.length">
-        <span class="fw-bold">Genres</span>: @for (genre of mediaItem?.genres; track genre.id){ <br /> {{ genre.name }} }
-      </p>
-
+      </div>
     </div>
   </div>
-</div>
+} @else {
+  <loading-spinner [loading]="loading()"></loading-spinner>
+}
+

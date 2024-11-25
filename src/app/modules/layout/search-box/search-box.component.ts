@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
-import { ActivationEnd, Router } from '@angular/router';
-import { MediaType } from '../../../app.settings';
+import { Router } from '@angular/router';
+import { MediaType, SEARCH_DEBOUNCE_TIME, SEARCH_START_MIN_CHARACTERS } from '../../../app.settings';
 
 interface ISearchForm {
   searchTerm:FormControl<string>;
@@ -14,14 +14,13 @@ interface ISearchForm {
     ReactiveFormsModule
   ],
   standalone: true,
-  templateUrl: './search-box.component.html',
-  styleUrl: './search-box.component.scss'
+  templateUrl: './search-box.component.html'
 })
 export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() public mediaType!:MediaType;
   @Input() public searchTerm?:string;
 
   private routerSubscription:Subscription = new Subscription();
-  private mediaType?:MediaType;
   public searchPlaceholder:string = 'Search';
 
   constructor(
@@ -39,17 +38,24 @@ export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes:SimpleChanges) {
+    if (changes['mediaType']) {
+      this.mediaType = changes['mediaType'].currentValue;
+      // update the placeholder with a custom text
+      this.setPlaceholder();
+    }
+
     if (changes['searchTerm']) {
       this.searchTerm = changes['searchTerm'].currentValue;
       // update the input with the new value from query
       this.searchFormGroup.get('searchTerm')?.setValue(this.searchTerm);
     }
+
   }
 
   private listen():void {
     // watch for search input
     this.searchFormGroup.get('searchTerm')?.valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(SEARCH_DEBOUNCE_TIME))
       .subscribe((searchTerm:string) => {
         // clear search query
         if(!searchTerm){
@@ -57,19 +63,8 @@ export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // perform search when min 3 characters
-        if(searchTerm?.length >= 3){
+        if(searchTerm?.length >= SEARCH_START_MIN_CHARACTERS){
           this.addSearchTermToQuery(searchTerm);
-        }
-      });
-
-    // fetch the type of media that is rendered
-    this.routerSubscription = this.router.events
-      .subscribe((event) => {
-        if (event instanceof ActivationEnd) {
-          if(event?.snapshot?.data['mediaType']){
-            this.mediaType = event?.snapshot?.data['mediaType'];
-            this.setPlaceholder();
-          }
         }
       });
   }
@@ -88,7 +83,7 @@ export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
       this.searchPlaceholder = 'Search a TV Show';
     }
 
-    this.searchPlaceholder = `${this.searchPlaceholder} (min 3 characters)`;
+    this.searchPlaceholder = `${this.searchPlaceholder} (min ${SEARCH_START_MIN_CHARACTERS} characters)`;
   }
 
   public ngOnDestroy():void {

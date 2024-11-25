@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { APP_NAME, MediaType } from './app.settings';
+import { APP_NAME, FIRST_PAGE, MediaType } from './app.settings';
 import { TokenGuard } from './shared/guards/token.guard';
 import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
 import { TopRatedMediaComponent } from './modules/media/top-rated-media/top-rated-media.component';
@@ -17,7 +17,7 @@ export const routes:Routes = [
   // no homepage, instead redirect to the tab: Top Rated TV Shows
   {
     path: '',
-    redirectTo: '/tv-show/top-rated',
+    redirectTo: FIRST_PAGE,
     pathMatch: 'full'
   },
   // the wizard is used to retrieve the token
