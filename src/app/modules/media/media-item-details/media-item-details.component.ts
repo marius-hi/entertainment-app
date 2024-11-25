@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MediaType } from '../../../app.routes';
+import { MediaType } from '../../../app.settings';
 import { IMediaDataResponse, IMediaDetailsResponse, MediaDataService } from '../media-data.service';
 import { finalize } from 'rxjs';
 

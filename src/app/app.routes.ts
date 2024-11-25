@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { APP_NAME } from './app.config';
+import { APP_NAME, MediaType } from './app.settings';
 import { TokenGuard } from './shared/guards/token.guard';
 import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
 import { TopRatedMediaComponent } from './modules/media/top-rated-media/top-rated-media.component';
@@ -7,10 +7,6 @@ import { PageNotFoundComponent } from './modules/page-not-found/page-not-found.c
 import { WizardComponent } from './modules/wizard/wizard.component';
 import { MediaItemDetailsComponent } from './modules/media/media-item-details/media-item-details.component';
 
-export enum MediaType {
-  MOVIE = 'movie',
-  TV_SHOW = 'tv'
-}
 
 const pageTitleResolver:ResolveFn<string> = (route:ActivatedRouteSnapshot):Observable<string> => {
   const title:string = route.data[ 'title' ];

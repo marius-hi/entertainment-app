@@ -1,5 +1,11 @@
-@for (item of items; track item.id) {
-  <media-item [item]="item" [mediaType]="mediaType"></media-item>
-} @empty {
-  There are no items.
-}
+<div class="container mt-5">
+  <div class="row">
+    @for (item of items; track item.id) {
+      <div class="col-md-3 mb-5">
+        <media-item [item]="item" [mediaType]="mediaType"></media-item>
+      </div>
+      } @empty {
+        There are no items.
+      }
+    </div>
+</div>

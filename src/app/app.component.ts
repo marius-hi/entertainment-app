@@ -1,14 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { HeaderNavigationComponent } from './modules/navigation/header-navigation/header-navigation.component';
 
 @Component({
   selector: 'app-root',
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterLink
+    MatSidenavModule,
+    MatToolbarModule,
+    HeaderNavigationComponent,
+    RouterOutlet
   ],
   templateUrl: './app.component.html',
   standalone: true,
@@ -16,7 +21,6 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private routerSubscription:Subscription = new Subscription();
-  private title:string = 'entertainment-app';
   public isWizard?:boolean;
 
   constructor(

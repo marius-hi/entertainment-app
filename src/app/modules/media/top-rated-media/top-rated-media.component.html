@@ -1,4 +1,16 @@
-<p>top-rated-media works!</p>
-<router-outlet />
+<div class="top-rated-media" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" [scrollWindow]="true">
+  <div >
+    <media-list *ngIf="!errorMessage" [items]="mediaItems" [mediaType]="mediaType"></media-list>
+    <div *ngIf="errorMessage" class="mt-3">
+      <div class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+    </div>
+<!--    <div class="activity-indicator">-->
+<!--      <activity-indicator [loading]="loading"></activity-indicator>-->
+<!--    </div>-->
+  </div>
+</div>
 
-<media-list [items]="mediaItems" [mediaType]="mediaType"></media-list>
+
+

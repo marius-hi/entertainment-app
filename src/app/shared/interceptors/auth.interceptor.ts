@@ -6,7 +6,7 @@ import {
   HttpEvent,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TMDB_API_HOST } from '../../app.config';
+import { TMDB_API_HOST } from '../../app.settings';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()

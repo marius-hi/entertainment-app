@@ -1,10 +1,7 @@
 @if (!isWizard) {
-  <nav>
-    <a class="button" routerLink="/movie/top-rated">Top Rated Movies</a> |
-    <a class="button" routerLink="/tv-show/top-rated">Top Rated TV Shows</a><br />
-    <a class="button" routerLink="/movie/detail/238">Movies - Details</a> |
-    <a class="button" routerLink="/tv-show/detail/94954">TV Shows - Details</a> |
-  </nav>
+  <header-navigation></header-navigation>
 }
 
-<router-outlet />
+<main>
+  <router-outlet />
+</main>

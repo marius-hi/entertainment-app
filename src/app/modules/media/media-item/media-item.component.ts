@@ -1,20 +1,25 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { IMovieItem, ITVShowItem } from '../media-data.service';
-import { DatePipe, DecimalPipe, JsonPipe } from '@angular/common';
-import { MediaType } from '../../../app.routes';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { IMediaItem, MediaItemService } from './media-item.service';
 import { MatChip } from '@angular/material/chips';
 import { Router } from '@angular/router';
+
+
+import { MediaType } from '../../../app.settings';
+import { MatGridTile } from '@angular/material/grid-list';
+import { faKey, faStar } from '@fortawesome/free-solid-svg-icons';
+import { FaIconComponent, IconDefinition } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'media-item',
   imports: [
     MatCardModule,
-    JsonPipe,
     MatChip,
     DecimalPipe,
-    DatePipe
+    DatePipe,
+    FaIconComponent
   ],
   providers: [
     MediaItemService
@@ -26,6 +31,7 @@ import { Router } from '@angular/router';
 export class MediaItemComponent implements OnChanges {
   @Input() public item!:IMovieItem|ITVShowItem;
   @Input() public mediaType!:MediaType;
+  protected readonly faStar:IconDefinition = faStar;
   public model!:IMediaItem;
 
   constructor(

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { IMovieItem, ITVShowItem } from '../media-data.service';
-import { MediaType } from '../../../app.routes';
-import { TMDB_IMAGE_PATH } from '../../../app.config';
+import { MediaType, TMDB_IMAGE_PATH } from '../../../app.settings';
 
 export interface IMediaItem {
   id:number;

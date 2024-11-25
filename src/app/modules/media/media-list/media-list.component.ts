@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { IMovieItem, ITVShowItem } from '../media-data.service';
+import { MediaType } from '../../../app.settings';
 import { MediaItemComponent } from '../media-item/media-item.component';
-import { MediaType } from '../../../app.routes';
 
 @Component({
   selector: 'media-list',

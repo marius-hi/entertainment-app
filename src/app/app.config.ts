@@ -1,3 +1,5 @@
+// angular configurations to bootstrap the application
+
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
@@ -6,10 +8,6 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { AuthService } from './shared/services/auth.service';
 import { LocalStorageService } from './shared/services/local-storage.service';
-
-export const APP_NAME:string = 'Entertainment App';
-export const TMDB_API_HOST:string = 'https://api.themoviedb.org/3';
-export const TMDB_IMAGE_PATH:string = 'https://image.tmdb.org/t/p/w220_and_h330_face';
 
 export const appConfig:ApplicationConfig = {
   providers: [

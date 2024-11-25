@@ -1,29 +1,42 @@
 .card {
-  max-width: 400px;
-  background-color: var(--mat-sys-surface);
-
-  &__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--mat-sys-primary);
-
-    &__chip {
-      margin-left: 10px;
-    }
-
-    &__link:hover {
-      color: var(--mat-sys-secondary);
-      cursor: pointer;
-    }
-  }
-
-  &__subtitle {
-    margin-bottom: 10px;
-  }
-
   &__link {
     display: contents;
     cursor: pointer;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 0 8px 0;
+
+    &__rating {
+      background-color: rgba(255, 254, 182, 0.85) !important;
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      z-index: 100;
+    }
+  }
+
+  &__footer {
+    &__title {
+      padding: 10px;
+      font-size: 20px;
+      color: var(--mat-sys-primary);
+
+      &__link {
+        text-decoration: none;
+
+        &:hover {
+          color: var(--mat-sys-secondary);
+          cursor: pointer;
+        }
+      }
+    }
+
+    &__subtitle {
+      padding: 0 10px 10px 10px;
+      color: var(--mat-sys-secondary);
+    }
   }
 }

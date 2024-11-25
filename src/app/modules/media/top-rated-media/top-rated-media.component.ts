@@ -1,15 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { IMediaDataResponse, IMovieItem, ITVShowItem, MediaDataService } from '../media-data.service';
-import { MediaType } from '../../../app.routes';
 import { finalize } from 'rxjs';
 import { MediaListComponent } from '../media-list/media-list.component';
+
+
+import { MediaType } from '../../../app.settings';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'top-rated-media',
   imports: [
-    RouterOutlet,
-    MediaListComponent
+    CommonModule,
+    MediaListComponent,
+    InfiniteScrollDirective
   ],
   providers: [
     MediaDataService
@@ -23,6 +27,9 @@ export class TopRatedMediaComponent implements OnInit {
   public mediaItems:IMovieItem[]|ITVShowItem[] = [];
   private loading:boolean = false;
   public errorMessage:string = '';
+  public scrollDistance:number = 1;
+  public throttle:number = 500;
+  private page:number = 1;
 
   constructor(
     private mediaDataService:MediaDataService
@@ -58,4 +65,14 @@ export class TopRatedMediaComponent implements OnInit {
       this.errorMessage = err.message ? `Error: ${err.message}` : 'Error loading data';
     }
   };
+
+  /**
+   * @method onScrollDown
+   * @description Method used to load more repositories when scrolling down
+   */
+  public onScrollDown(): void {
+    this.page += 1;
+    // this.loadMostStarredRepos(this.startDate, this.page);
+    console.log('L75 - onScrollDown', this.page);
+  }
 }

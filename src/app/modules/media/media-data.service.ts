@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TMDB_API_HOST } from '../../app.config';
+import { MediaType, TMDB_API_HOST } from '../../app.settings';
 import { Cacheable } from 'ts-cacheable';
-import { MediaType } from '../../app.routes';
 
 export interface IMediaDataResponse {
   page:number;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TMDB_API_HOST } from '../../app.settings';
 import { Observable } from 'rxjs';
-import { TMDB_API_HOST } from '../../app.config';
 
 export interface IValidateTokenResponse {
   success:boolean;
