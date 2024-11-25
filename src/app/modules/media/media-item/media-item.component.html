@@ -1,20 +1,20 @@
 <mat-card class="card" appearance="outlined">
   <mat-card-header class="card__header">
     <mat-chip class="card__header__rating" title="Rating">
-      <fa-icon [icon]="faStar"></fa-icon> {{ model.rating | number: '1.1-2' }}
+      <fa-icon [icon]="faStar"></fa-icon> {{ item.rating | number: '1.1-2' }}
     </mat-chip>
   </mat-card-header>
-  <a (click)="onClick(model)" class="card__link">
-    <img mat-card-image [src]="model.image" [alt]="model.title" [title]="model.title">
+  <a (click)="onClick(item)" class="card__link">
+    <img mat-card-image [src]="item.image" [alt]="item.title" [title]="item.title">
   </a>
   <mat-card-footer class="card__footer">
     <mat-card-title class="card__footer__title">
-      <a (click)="onClick(model)" class="card__footer__title__link">
-        <span>{{ model.title }}</span>
+      <a (click)="onClick(item)" class="card__footer__title__link">
+        <span>{{ item.title }}</span>
       </a>
     </mat-card-title>
     <mat-card-subtitle class="card__footer__subtitle">
-      {{ model.subtitle | date: 'dd/MM/yyyy' }}
+      {{ item.subtitle | date: 'dd/MM/yyyy' }}
     </mat-card-subtitle>
   </mat-card-footer>
 </mat-card>

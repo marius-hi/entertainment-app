@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IMediaDataResponse, IMovieItem, ITVShowItem, MediaDataService } from '../media-data.service';
+import { IMediaDataResponse, MediaDataService } from '../media-data.service';
 import { finalize } from 'rxjs';
 import { MediaListComponent } from '../media-list/media-list.component';
 
@@ -7,6 +7,7 @@ import { MediaListComponent } from '../media-list/media-list.component';
 import { MediaType } from '../../../app.settings';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { CommonModule } from '@angular/common';
+import { IMediaItem, MediaService } from '../media.service';
 
 @Component({
   selector: 'top-rated-media',
@@ -16,6 +17,7 @@ import { CommonModule } from '@angular/common';
     InfiniteScrollDirective
   ],
   providers: [
+    MediaService,
     MediaDataService
   ],
   templateUrl: './top-rated-media.component.html',
@@ -24,7 +26,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TopRatedMediaComponent implements OnInit {
   @Input() public mediaType!:MediaType;
-  public mediaItems:IMovieItem[]|ITVShowItem[] = [];
+  public mediaItems:IMediaItem[] = [];
   private loading:boolean = false;
   public errorMessage:string = '';
   public scrollDistance:number = 1;
@@ -32,6 +34,7 @@ export class TopRatedMediaComponent implements OnInit {
   private page:number = 1;
 
   constructor(
+    private mediaService:MediaService,
     private mediaDataService:MediaDataService
   ) {}
 
@@ -44,9 +47,8 @@ export class TopRatedMediaComponent implements OnInit {
       .subscribe({
         next: (media:IMediaDataResponse) => {
           if(media?.results) {
-            this.mediaItems = media.results;
-            console.log('L19 - constructor', media.results);
-
+            this.mediaItems = this.mediaService.parseMediaData(media.results, this.mediaType);
+            console.log('L51 - next', this.mediaItems);
             // this.mediaItems = (this.mediaItems || []).concat(this.fetchExistingRating(mostStarredRepos.items));
           }
         },

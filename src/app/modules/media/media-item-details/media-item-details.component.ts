@@ -5,7 +5,8 @@ import { finalize } from 'rxjs';
 
 @Component({
   selector: 'media-item-details',
-  imports: [],
+  imports: [
+  ],
   providers: [ MediaDataService ],
   standalone: true,
   templateUrl: './media-item-details.component.html',
