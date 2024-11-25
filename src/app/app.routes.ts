@@ -76,6 +76,7 @@ export const routes:Routes = [
     data: {
       title: 'Page not found (error 404)',
     },
-    title: pageTitleResolver
+    title: pageTitleResolver,
+    canActivate: [ TokenGuard ]
   },
 ];
