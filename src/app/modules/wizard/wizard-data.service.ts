@@ -20,7 +20,7 @@ export class WizardDataService {
   ) {}
 
   public validateToken(token:string): Observable<IValidateTokenResponse> {
-    const url:string = `${TMDB_API_HOST}/authentication`;
+    const url = `${TMDB_API_HOST}/authentication`;
 
     const headers:HttpHeaders = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`);

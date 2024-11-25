@@ -40,7 +40,7 @@ export class MediaItemDetailsComponent implements OnInit {
         next: (mediaDetails:IMediaResponseItemDetails) => {
           if(mediaDetails){
             const mediaData:IMediaItem[] = this.mediaService.parseMediaData([ mediaDetails ], this.mediaType);
-            this.mediaItem = mediaData.length ? mediaData[0] : <any>{};
+            this.mediaItem = mediaData.length ? mediaData[0] : {} as any;
           }
         }
       });

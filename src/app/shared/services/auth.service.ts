@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
 
-const TMDB_KEY_STORAGE:string = 'tmdb_token';
+const TMDB_KEY_STORAGE = 'tmdb_token';
 
 @Injectable()
 export class AuthService {

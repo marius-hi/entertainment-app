@@ -21,7 +21,7 @@ export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public searchTerm?:string;
 
   private routerSubscription:Subscription = new Subscription();
-  public searchPlaceholder:string = 'Search';
+  public searchPlaceholder = 'Search';
 
   constructor(
     public router:Router

@@ -9,5 +9,5 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   templateUrl: './loading-spinner.component.html'
 })
 export class LoadingSpinnerComponent {
-  @Input() public loading:boolean = false;
+  @Input() public loading = false;
 }
