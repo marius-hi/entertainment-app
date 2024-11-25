@@ -1,8 +1,10 @@
-<nav>
-  <a class="button" routerLink="/movie/top-rated">Movies - Top Rated</a> |
-  <a class="button" routerLink="/tv-show/top-rated">TV Shows - Top Rated</a><br />
-  <a class="button" routerLink="/movie/detail/123">Movies - Details</a> |
-  <a class="button" routerLink="/tv-show/detail/456">TV Shows - Details</a> |
-</nav>
+@if (!isWizard) {
+  <nav>
+    <a class="button" routerLink="/movie/top-rated">Top Rated Movies</a> |
+    <a class="button" routerLink="/tv-show/top-rated">Top Rated TV Shows</a><br />
+    <a class="button" routerLink="/movie/detail/238">Movies - Details</a> |
+    <a class="button" routerLink="/tv-show/detail/94954">TV Shows - Details</a> |
+  </nav>
+}
 
 <router-outlet />

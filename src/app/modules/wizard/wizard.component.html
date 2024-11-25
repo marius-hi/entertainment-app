@@ -1,0 +1,34 @@
+<div class="wizard">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title class="wizard__card__title">
+        Connect the application to The Movie Database (TMDB)
+      </mat-card-title>
+      <mat-card-subtitle class="wizard__card__subtitle">
+        To proceed, please provide your TMDB <b>API Read Access Token</b> into the field below.<br /><br />
+        You can locate this token logging into your <a href="https://www.themoviedb.org/settings/api" target="_blank">TMDB account</a> and navigating to Settings > API. If you didn't create one yet, please use <a href="https://developer.themoviedb.org/docs/getting-started" target="_blank">this guide</a> to get started.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <form (ngSubmit)="submit()" [formGroup]="wizardForm" autocomplete="off">
+      <mat-card-content class="wizard__card__content">
+        <mat-form-field appearance="outline">
+          <mat-label>TMDB Token</mat-label>
+          <textarea matInput [errorStateMatcher]="matcher" formControlName="token" rows="5" cols="120"></textarea>
+          <mat-error *ngIf="token?.hasError('required')">
+            Token is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="token?.hasError('invalidToken') && !token?.hasError('required')">
+            Fail to validate the token! {{ token?.getError('invalidToken') }}
+          </mat-error>
+        </mat-form-field>
+        <mat-card-actions>
+          <button [disabled]="!wizardForm.valid || busy" color="primary" mat-raised-button type="submit">
+            <mat-spinner *ngIf="busy" diameter="15"></mat-spinner>
+            Save & Continue
+          </button>
+        </mat-card-actions>
+      </mat-card-content>
+    </form>
+  </mat-card>
+</div>
