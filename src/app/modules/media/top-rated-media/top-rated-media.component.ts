@@ -28,7 +28,6 @@ export class TopRatedMediaComponent implements OnInit {
   @Input() public mediaType!:MediaType;
   public mediaItems:IMediaItem[] = [];
   public loading:boolean = false;
-  public errorMessage:string = '';
   public scrollDistance:number = 1;
   public throttle:number = 500;
   private page:WritableSignal<number> = signal(1);
@@ -48,7 +47,7 @@ export class TopRatedMediaComponent implements OnInit {
     const getRatedSubscription:Observable<IMediaResponseData> = this.mediaDataService.getTopRated(this.mediaType, page)
       .pipe(finalize(() => {
         this.loading = false;
-      }))
+      }));
 
     // take the first 10 media results
     getRatedSubscription

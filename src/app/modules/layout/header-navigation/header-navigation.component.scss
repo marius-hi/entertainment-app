@@ -1,7 +1,6 @@
 .header-navigation {
   background-color: var(--mat-sys-background);
   &__menu {
-
     &__item {
       > a {
         color: var(--mat-sys-primary);
@@ -10,6 +9,10 @@
       &--active {
         color: var(--mat-sys-primary);
       }
+    }
+
+    &__search-box {
+      display: contents;
     }
   }
 }

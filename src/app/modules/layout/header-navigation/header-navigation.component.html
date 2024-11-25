@@ -7,10 +7,10 @@
     <div class="collapse navbar-collapse header-navigation__menu" id="headerNavigationContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link header-navigation__menu__item" aria-current="page" [routerLink]="['/tv-show/top-rated']" [routerLinkActive]="['header-navigation__menu__item--active']">Top Rated TV Shows</a>
+          <a class="nav-link header-navigation__menu__item" aria-current="page" [routerLink]="['/tv-show/top-rated']" [queryParams]="routerQueryParameters" [routerLinkActive]="['header-navigation__menu__item--active']">Top Rated TV Shows</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link header-navigation__menu__item" [routerLink]="['/movie/top-rated']" [routerLinkActive]="['header-navigation__menu__item--active']">Top Rated Movies</a>
+          <a class="nav-link header-navigation__menu__item" [routerLink]="['/movie/top-rated']" [queryParams]="routerQueryParameters" [routerLinkActive]="['header-navigation__menu__item--active']">Top Rated Movies</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/wizard" title="Token">
@@ -18,9 +18,7 @@
           </a>
         </li>
       </ul>
-      <form class="d-flex col-md-6">
-        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-      </form>
+      <search-box class="header-navigation__menu__search-box"></search-box>
     </div>
   </div>
 </nav>

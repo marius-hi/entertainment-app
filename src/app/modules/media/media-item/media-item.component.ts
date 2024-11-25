@@ -30,7 +30,7 @@ export class MediaItemComponent {
 
   public onClick(model:IMediaItem|undefined):void {
     if(model?.urlPageDetail){
-      this.router.navigate([model.urlPageDetail]);
+      this.router.navigate([model.urlPageDetail], { queryParams: { search: undefined }, replaceUrl: true })
     }
   }
 }

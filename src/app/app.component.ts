@@ -4,7 +4,8 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { HeaderNavigationComponent } from './modules/navigation/header-navigation/header-navigation.component';
+import { HeaderNavigationComponent } from './modules/layout/header-navigation/header-navigation.component';
+import { SearchResultsComponent } from './modules/media/search-results/search-results.component';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ import { HeaderNavigationComponent } from './modules/navigation/header-navigatio
     MatSidenavModule,
     MatToolbarModule,
     HeaderNavigationComponent,
-    RouterOutlet
+    RouterOutlet,
+    SearchResultsComponent
   ],
   templateUrl: './app.component.html',
   standalone: true,
@@ -22,9 +24,10 @@ import { HeaderNavigationComponent } from './modules/navigation/header-navigatio
 export class AppComponent implements OnInit, OnDestroy {
   private routerSubscription:Subscription = new Subscription();
   public isWizard?:boolean;
+  public searchQuery?:string;
 
   constructor(
-    public router: Router
+    public router:Router
   ) {}
 
   public ngOnInit():void {
@@ -34,6 +37,14 @@ export class AppComponent implements OnInit, OnDestroy {
           this.isWizard = event?.url === '/wizard';
         }
       });
+  }
+
+  public setSearchQuery(searchQuery:string):void {
+    if(searchQuery !== '') {
+      this.searchQuery = searchQuery;
+    } else {
+      this.searchQuery = undefined;
+    }
   }
 
   public ngOnDestroy():void {

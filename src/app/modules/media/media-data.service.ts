@@ -85,4 +85,12 @@ export class MediaDataService {
     let url:string = `${TMDB_API_HOST}/${mediaType}/${id}`;
     return this.http.get<IMediaResponseItemDetails>(url);
   }
+
+  public searchMedia(searchTerm:string, mediaType:MediaType, page?:number): Observable<IMediaResponseData> {
+    let url:string = `${TMDB_API_HOST}/search/${mediaType}?query=${searchTerm}`;
+    if(page){
+      url += `&page=${page}`;
+    }
+    return this.http.get<IMediaResponseData>(url);
+  }
 }

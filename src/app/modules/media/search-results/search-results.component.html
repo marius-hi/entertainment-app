@@ -1,4 +1,4 @@
-<div class="top-rated-media" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" [scrollWindow]="true">
+<div class="top-rated-media" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" [scrollWindow]="true" *ngIf="searchQuery">
   <media-list [items]="mediaItems" [mediaType]="mediaType" [loading]="loading"></media-list>
   <div *ngIf="loading" class="d-flex justify-content-center">
     <mat-spinner diameter="35"></mat-spinner>
