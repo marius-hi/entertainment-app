@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { finalize, map, Observable } from 'rxjs';
@@ -25,9 +25,9 @@ import { MediaListComponent } from '../media-list/media-list.component';
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss'
 })
-export class SearchResultsComponent implements OnInit {
-  @Output() public onSearchQueryChange:EventEmitter<string> = new EventEmitter<string>();
-  public searchQuery:string = '';
+export class SearchResultsComponent implements OnInit, OnChanges {
+  @Input() searchTerm?:string;
+
   public mediaItems:IMediaItem[] = [];
   public loading:boolean = false;
   public scrollDistance:number = 1;
@@ -42,17 +42,18 @@ export class SearchResultsComponent implements OnInit {
     private mediaDataService:MediaDataService
   ) {}
 
-  public ngOnInit():void {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.searchQuery = params['search'] || '';
-      this.onSearchQueryChange.emit(this.searchQuery);
+  public ngOnChanges(changes:SimpleChanges) {
+    if (changes['searchTerm']) {
+      this.searchTerm = changes['searchTerm'].currentValue;
       this.mediaItems = []; // clear previous items
 
-      if(this.searchQuery) {
+      if(this.searchTerm) {
         this.startSearch();
       }
-    });
+    }
+  }
 
+  public ngOnInit():void {
     // fetch the type of media that is rendered and determine if is changed
     this.router.events
       .subscribe((event) => {
@@ -61,7 +62,7 @@ export class SearchResultsComponent implements OnInit {
             const mediaTypeChanged:boolean = event?.snapshot?.data['mediaType'] !== this.mediaType;
             this.mediaType = event?.snapshot?.data['mediaType'];
             // when changing the media type, perform a new search with the same query search term
-            if(mediaTypeChanged && this.searchQuery){
+            if(mediaTypeChanged && this.searchTerm){
               this.mediaItems = [];
               this.startSearch();
             }
@@ -73,7 +74,7 @@ export class SearchResultsComponent implements OnInit {
 
   private startSearch(page?:number):void {
     this.loading = true;
-    const searchSubscription:Observable<IMediaResponseData> = this.mediaDataService.searchMedia(this.searchQuery.trim(), this.mediaType, page) // this.mediaType
+    const searchSubscription:Observable<IMediaResponseData> = this.mediaDataService.searchMedia(this.searchTerm?.trim() || '', this.mediaType, page) // this.mediaType
       .pipe(finalize(() => {
         this.loading = false;
       }));

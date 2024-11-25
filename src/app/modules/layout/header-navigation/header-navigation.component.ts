@@ -1,7 +1,6 @@
-import { Component, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FontAwesomeModule, IconDefinition } from '@fortawesome/angular-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
-
 import { APP_NAME } from '../../../app.settings';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SearchBoxComponent } from '../search-box/search-box.component';
@@ -18,19 +17,19 @@ import { SearchBoxComponent } from '../search-box/search-box.component';
   styleUrl: './header-navigation.component.scss'
 })
 export class HeaderNavigationComponent implements OnChanges {
-  @Input() public searchQuery?:string;
+  @Input() public searchTerm?:string;
+
   public appTitle:string = APP_NAME;
   protected readonly faKey:IconDefinition = faKey;
   public routerQueryParameters = {};
 
   public ngOnChanges(changes:SimpleChanges) {
-    if (changes['searchQuery']) {
-      this.searchQuery = changes['searchQuery'].currentValue;
+    if (changes['searchTerm']) {
+      this.searchTerm = changes['searchTerm'].currentValue;
 
       this.routerQueryParameters = {
-        search: this.searchQuery
+        search: this.searchTerm
       }
     }
   }
 }
-

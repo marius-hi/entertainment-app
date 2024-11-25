@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subscription } from 'rxjs';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
+import { ActivationEnd, Router } from '@angular/router';
 import { MediaType } from '../../../app.settings';
 
 interface ISearchForm {
@@ -17,14 +17,15 @@ interface ISearchForm {
   templateUrl: './search-box.component.html',
   styleUrl: './search-box.component.scss'
 })
-export class SearchBoxComponent implements OnInit, OnDestroy {
+export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() public searchTerm?:string;
+
   private routerSubscription:Subscription = new Subscription();
   private mediaType?:MediaType;
   public searchPlaceholder:string = 'Search';
 
   constructor(
-    public router:Router,
-    private activatedRoute:ActivatedRoute
+    public router:Router
   ) {}
 
   public searchFormGroup:FormGroup = new FormGroup<ISearchForm>({
@@ -37,18 +38,26 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.listen();
   }
 
+  public ngOnChanges(changes:SimpleChanges) {
+    if (changes['searchTerm']) {
+      this.searchTerm = changes['searchTerm'].currentValue;
+      // update the input with the new value from query
+      this.searchFormGroup.get('searchTerm')?.setValue(this.searchTerm);
+    }
+  }
+
   private listen():void {
     // watch for search input
     this.searchFormGroup.get('searchTerm')?.valueChanges
       .pipe(debounceTime(1000))
       .subscribe((searchTerm:string) => {
         // clear search query
-        if(!searchTerm.length){
+        if(!searchTerm){
           this.router.navigate([]);
         }
 
         // perform search when min 3 characters
-        if(searchTerm.length >= 3){
+        if(searchTerm?.length >= 3){
           this.addSearchTermToQuery(searchTerm);
         }
       });
@@ -61,14 +70,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
             this.mediaType = event?.snapshot?.data['mediaType'];
             this.setPlaceholder();
           }
-        }
-      });
-
-    // get the searched term from the query parameters
-    this.activatedRoute.queryParams
-      .subscribe(params => {
-        if (params['search']) {
-          this.searchFormGroup.get('searchTerm')?.setValue(params['search']);
         }
       });
   }

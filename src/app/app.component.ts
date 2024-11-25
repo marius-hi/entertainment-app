@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -24,27 +24,30 @@ import { SearchResultsComponent } from './modules/media/search-results/search-re
 export class AppComponent implements OnInit, OnDestroy {
   private routerSubscription:Subscription = new Subscription();
   public isWizard?:boolean;
-  public searchQuery?:string;
+  public searchTerm?:string;
 
   constructor(
+    public activatedRoute:ActivatedRoute,
     public router:Router
   ) {}
 
   public ngOnInit():void {
+    this.listen();
+  }
+
+  private listen():void {
+    // get the search term from the query parameters
+    this.activatedRoute.queryParams
+      .subscribe((params:Params) => {
+        this.searchTerm = params['search'];
+      });
+
     this.routerSubscription = this.router.events
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           this.isWizard = event?.url === '/wizard';
         }
       });
-  }
-
-  public setSearchQuery(searchQuery:string):void {
-    if(searchQuery !== '') {
-      this.searchQuery = searchQuery;
-    } else {
-      this.searchQuery = undefined;
-    }
   }
 
   public ngOnDestroy():void {

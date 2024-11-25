@@ -1,8 +1,8 @@
 @if (!isWizard) {
-  <header-navigation [searchQuery]="searchQuery"></header-navigation>
+  <header-navigation [searchTerm]="searchTerm"></header-navigation>
 }
 
 <main>
-  <search-results (onSearchQueryChange)="setSearchQuery($event)"></search-results>
-  <router-outlet *ngIf="!searchQuery" />
+  <search-results [searchTerm]="searchTerm"></search-results>
+  <router-outlet *ngIf="!searchTerm" />
 </main>
