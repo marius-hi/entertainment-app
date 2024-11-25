@@ -1,0 +1,19 @@
+<pre>{{ item | json }}</pre>
+
+  <mat-card class="card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title class="card__title">
+        <a (click)="onClick(model)" class="card__title__link">
+          <span>{{ model.title }}</span>
+        </a>
+        <mat-chip class="card__title__chip" title="Rating">{{ model.rating | number: '1.1-2' }}</mat-chip>
+      </mat-card-title>
+      <mat-card-subtitle class="card__subtitle">
+        {{ model.subtitle | date: 'dd/MM/yyyy' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <a (click)="onClick(model)" class="card__link">
+      <img mat-card-image [src]="model.image" [alt]="model.title">
+    </a>
+  </mat-card>
+

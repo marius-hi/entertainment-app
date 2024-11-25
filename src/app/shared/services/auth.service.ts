@@ -17,6 +17,7 @@ export class AuthService {
   }
 
   public get token():string|null {
+    this._token = this._token || this.localStorage.get(TMDB_KEY_STORAGE);
     return this._token;
   }
 

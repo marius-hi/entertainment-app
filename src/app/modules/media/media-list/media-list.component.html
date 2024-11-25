@@ -1,0 +1,5 @@
+@for (item of items; track item.id) {
+  <media-item [item]="item" [mediaType]="mediaType"></media-item>
+} @empty {
+  There are no items.
+}

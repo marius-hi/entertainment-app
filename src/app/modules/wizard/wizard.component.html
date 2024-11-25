@@ -22,6 +22,9 @@
             Fail to validate the token! {{ token?.getError('invalidToken') }}
           </mat-error>
         </mat-form-field>
+        <div *ngIf="hasValidToken" class="alert alert-success" role="alert">
+          The application has been successfully connected to TMDB. <a [routerLink]="['/']">Return to the application</a>
+        </div>
         <mat-card-actions>
           <button [disabled]="!wizardForm.valid || busy" color="primary" mat-raised-button type="submit">
             <mat-spinner *ngIf="busy" diameter="15"></mat-spinner>

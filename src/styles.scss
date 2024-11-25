@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core();
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    // possible to choose another theme for the application (see https://material.angular.io/guide/theming#prebuilt-color-palettes for all build-in themes)
+    color: mat.$azure-palette,
+    //color: mat.$green-palette,
+    //color: mat.$rose-palette,
+    typography: Roboto,
+    density: 0
+  ));
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+a {
+  color: var(--mat-sys-primary);
+
+  &:hover {
+    color: var(--mat-sys-secondary);
+  }
+}

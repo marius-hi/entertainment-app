@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TopRatedDetailComponent } from './top-rated-detail.component';
+import { MediaItemInfoComponent } from './media-item-info.component';
 
-describe('TopRatedDetailComponent', () => {
-  let component: TopRatedDetailComponent;
-  let fixture: ComponentFixture<TopRatedDetailComponent>;
+describe('MediaItemInfoComponent', () => {
+  let component: MediaItemInfoComponent;
+  let fixture: ComponentFixture<MediaItemInfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TopRatedDetailComponent]
+      imports: [MediaItemInfoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TopRatedDetailComponent);
+    fixture = TestBed.createComponent(MediaItemInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

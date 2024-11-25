@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,8 @@ interface IWizardForm {
     MatCardHeader,
     MatCardSubtitle,
     MatCardTitle,
-    MatProgressSpinner
+    MatProgressSpinner,
+    RouterLink
   ],
   providers: [
     WizardDataService,
@@ -43,7 +44,7 @@ interface IWizardForm {
   styleUrl: './wizard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WizardComponent {
+export class WizardComponent implements OnInit {
   public wizardForm:FormGroup = new FormGroup<IWizardForm>({
     token: new FormControl('', {
       validators: [
@@ -55,6 +56,7 @@ export class WizardComponent {
 
   public matcher:ErrorStateMatcher = new ErrorStateMatcher();
   public busy?:boolean;
+  public hasValidToken!:boolean;
 
   constructor(
     private router:Router,
@@ -62,6 +64,13 @@ export class WizardComponent {
     private localStorage:LocalStorageService,
     private authService:AuthService
   ) {
+  }
+
+  public ngOnInit():void {
+    this.hasValidToken = this.authService.hasValidToken;
+    if(this.hasValidToken) {
+      this.token?.setValue(this.authService.token);
+    }
   }
 
   public submit():void {
@@ -76,6 +85,7 @@ export class WizardComponent {
         next: (successResponse:IValidateTokenResponse) => {
           if (successResponse?.success) {
             // set validated token and redirect to home
+            this.hasValidToken = true;
             this.authService.token = token;
             this.router.navigate([ '/' ]);
           }
