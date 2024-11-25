@@ -1,2 +1,43 @@
-<p>media-item-details works!</p>
-<!--<media-item [item]="mediaItem"></media-item>-->
+<div class="container mt-5" *ngIf="!loading">
+  <h4>Details</h4>
+  <div class="row">
+    <div class="col-md-4">
+      <media-item [item]="mediaItem"></media-item>
+    </div>
+    <div class="col-md-8">
+      <p>
+        <span class="fw-bold">Description</span>: {{ mediaItem?.description }}
+      </p>
+
+      <p *ngIf="mediaItem?.length">
+        <span class="fw-bold">Length</span>: {{ mediaItem?.length }}
+      </p>
+
+      <p>
+        <span class="fw-bold">Votes</span>: {{ mediaItem?.votes }}
+      </p>
+
+      <p>
+        <span class="fw-bold">Popularity</span>: {{ mediaItem?.popularity }}
+      </p>
+
+      <p>
+        <span class="fw-bold">Language</span>: {{ mediaItem?.language }}
+      </p>
+
+
+      <p *ngIf="mediaItem?.episodes">
+        <span class="fw-bold">Episodes</span>: {{ mediaItem?.episodes }}
+      </p>
+
+      <p *ngIf="mediaItem?.seasons">
+        <span class="fw-bold">Seasons</span>: {{ mediaItem?.seasons }}
+      </p>
+
+      <p *ngIf="mediaItem?.genres?.length">
+        <span class="fw-bold">Genres</span>: @for (genre of mediaItem?.genres; track genre.id){ <br /> {{ genre.name }} }
+      </p>
+
+    </div>
+  </div>
+</div>

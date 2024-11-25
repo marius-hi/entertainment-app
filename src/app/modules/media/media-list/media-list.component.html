@@ -1,11 +1,13 @@
 <div class="container mt-5">
   <div class="row">
     @for (item of items; track item.id) {
-      <div class="col-md-3 mb-5">
+      <div [classList]="gridColumnClass">
         <media-item [item]="item"></media-item>
       </div>
       } @empty {
-        There are no media items.
-      }
+        @if (!loading) {
+          There are no media items.
+        }
+    }
     </div>
 </div>

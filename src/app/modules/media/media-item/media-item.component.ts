@@ -21,14 +21,16 @@ import { IMediaItem } from '../media.service';
   styleUrl: './media-item.component.scss'
 })
 export class MediaItemComponent {
-  @Input() public item!:IMediaItem;
+  @Input() public item!:IMediaItem|undefined;
   protected readonly faStar:IconDefinition = faStar;
 
   constructor(
     private router:Router
   ) {}
 
-  public onClick(model:IMediaItem):void {
-    this.router.navigate([`/movie/detail/${model?.id}`]);
+  public onClick(model:IMediaItem|undefined):void {
+    if(model?.urlPageDetail){
+      this.router.navigate([model.urlPageDetail]);
+    }
   }
 }

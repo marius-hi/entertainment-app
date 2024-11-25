@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { MediaType, TMDB_API_HOST } from '../../app.settings';
 import { Cacheable } from 'ts-cacheable';
 
-export interface IMediaDataResponse {
+export interface IMediaResponseData {
   page:number;
-  results:IMovieItem[]|ITVShowItem[];
+  results:IMediaResponseItem[];
   total_pages:number;
   total_results:number;
 }
 
-interface IMediaDataItem {
+export interface IMediaResponseItem {
   id:number;
   adult:boolean;
   backdrop_path:string;
@@ -23,22 +23,16 @@ interface IMediaDataItem {
   video:boolean;
   vote_average:number;
   vote_count:number;
-}
-
-export interface IMovieItem extends IMediaDataItem {
-  title:string;
-  original_title:string;
-  release_date:Date;
-}
-
-export interface ITVShowItem extends IMediaDataItem {
+  title?:string;
+  original_title?:string;
+  release_date?:Date;
   name:string;
   origin_country:string;
   original_name:string;
   first_air_date:Date;
 }
 
-export interface IMediaDetailsResponse extends IMediaDataItem {
+export interface IMediaResponseItemDetails extends IMediaResponseItem {
   belongs_to_collection: {
     backdrop_path:string;
     id:number;
@@ -67,6 +61,8 @@ export interface IMediaDetailsResponse extends IMediaDataItem {
   videos: {
     id:string;
   }
+  number_of_episodes?:number;
+  number_of_seasons?:number;
 }
 
 @Injectable()
@@ -76,17 +72,17 @@ export class MediaDataService {
   ) {}
 
   @Cacheable()
-  public getTopRated(mediaType:MediaType, page?:number): Observable<IMediaDataResponse> {
+  public getTopRated(mediaType:MediaType, page?:number): Observable<IMediaResponseData> {
     let url:string = `${TMDB_API_HOST}/${mediaType}/top_rated?language=en-US`;
     if(page){
       url += `&page=${page}`;
     }
-    return this.http.get<IMediaDataResponse>(url);
+    return this.http.get<IMediaResponseData>(url);
   }
 
   @Cacheable()
-  public getDetails(mediaType:MediaType, id:number): Observable<IMediaDetailsResponse> {
+  public getDetails(mediaType:MediaType, id:number): Observable<IMediaResponseItemDetails> {
     let url:string = `${TMDB_API_HOST}/${mediaType}/${id}`;
-    return this.http.get<IMediaDetailsResponse>(url);
+    return this.http.get<IMediaResponseItemDetails>(url);
   }
 }

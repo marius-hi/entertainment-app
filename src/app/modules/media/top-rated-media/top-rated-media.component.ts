@@ -1,20 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { IMediaDataResponse, MediaDataService } from '../media-data.service';
-import { finalize } from 'rxjs';
+import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { IMediaResponseData, IMediaResponseItem, MediaDataService } from '../media-data.service';
+import { finalize, map, Observable } from 'rxjs';
 import { MediaListComponent } from '../media-list/media-list.component';
-
-
 import { MediaType } from '../../../app.settings';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { CommonModule } from '@angular/common';
 import { IMediaItem, MediaService } from '../media.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'top-rated-media',
   imports: [
     CommonModule,
     MediaListComponent,
-    InfiniteScrollDirective
+    InfiniteScrollDirective,
+    MatProgressSpinner
   ],
   providers: [
     MediaService,
@@ -27,11 +27,12 @@ import { IMediaItem, MediaService } from '../media.service';
 export class TopRatedMediaComponent implements OnInit {
   @Input() public mediaType!:MediaType;
   public mediaItems:IMediaItem[] = [];
-  private loading:boolean = false;
+  public loading:boolean = false;
   public errorMessage:string = '';
   public scrollDistance:number = 1;
   public throttle:number = 500;
-  private page:number = 1;
+  private page:WritableSignal<number> = signal(1);
+  private mediaItemsBuffer:IMediaItem[] = [];
 
   constructor(
     private mediaService:MediaService,
@@ -39,42 +40,48 @@ export class TopRatedMediaComponent implements OnInit {
   ) {}
 
   public ngOnInit():void {
+    this.loadTopRatedMedia();
+  }
+
+  private loadTopRatedMedia(page?:number):void {
     this.loading = true;
-    this.mediaDataService.getTopRated(this.mediaType)
+    const getRatedSubscription:Observable<IMediaResponseData> = this.mediaDataService.getTopRated(this.mediaType, page)
       .pipe(finalize(() => {
         this.loading = false;
       }))
-      .subscribe({
-        next: (media:IMediaDataResponse) => {
-          if(media?.results) {
-            this.mediaItems = this.mediaService.parseMediaData(media.results, this.mediaType);
-            console.log('L51 - next', this.mediaItems);
-            // this.mediaItems = (this.mediaItems || []).concat(this.fetchExistingRating(mostStarredRepos.items));
-          }
-        },
-        error: this.setError
-      });
-    };
 
-  /**
-   * @method setError
-   * @description Method used to handle and set the error provided by the server
-   * @param {ErrorEvent} err The error event object
-   */
-  private setError = (err: ErrorEvent): void => {
-    this.errorMessage = err?.error?.message;
-    if(!this.errorMessage){
-      this.errorMessage = err.message ? `Error: ${err.message}` : 'Error loading data';
-    }
-  };
+    // take the first 10 media results
+    getRatedSubscription
+      .pipe(
+        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results),
+        map((mediaItems:IMediaResponseItem[]) => mediaItems.slice(0, 10))
+      )
+      .subscribe((data:IMediaResponseItem[]) => {
+        this.mediaItems = (this.mediaItems || []).concat(this.mediaService.parseMediaData(data, this.mediaType));
+      });
+
+    // save the next 10 media results in a buffer
+    getRatedSubscription
+      .pipe(
+        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results),
+        map((mediaItems:IMediaResponseItem[]) => mediaItems.slice(10, 20))
+      )
+      .subscribe((mediaItems:IMediaResponseItem[]) => {
+        this.mediaItemsBuffer = this.mediaService.parseMediaData(mediaItems, this.mediaType);
+      });
+  }
 
   /**
    * @method onScrollDown
    * @description Method used to load more repositories when scrolling down
    */
   public onScrollDown(): void {
-    this.page += 1;
-    // this.loadMostStarredRepos(this.startDate, this.page);
-    console.log('L75 - onScrollDown', this.page);
+    if(this.mediaItemsBuffer.length) {
+      this.mediaItems = (this.mediaItems || []).concat(this.mediaItemsBuffer);
+      this.mediaItemsBuffer = [];
+    }  else {
+      this.page.set(this.page() + 1);
+      this.loadTopRatedMedia(this.page());
+    }
   }
 }

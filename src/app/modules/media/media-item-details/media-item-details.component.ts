@@ -1,40 +1,49 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MediaType } from '../../../app.settings';
-import { IMediaDataResponse, IMediaDetailsResponse, MediaDataService } from '../media-data.service';
 import { finalize } from 'rxjs';
+import { IMediaItem, MediaService } from '../media.service';
+import { MediaItemComponent } from '../media-item/media-item.component';
+import { IMediaResponseItemDetails, MediaDataService } from '../media-data.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'media-item-details',
-  imports: [
+  providers: [
+    MediaService,
+    MediaDataService
   ],
-  providers: [ MediaDataService ],
   standalone: true,
   templateUrl: './media-item-details.component.html',
+  imports: [
+    CommonModule,
+    MediaItemComponent
+  ],
   styleUrl: './media-item-details.component.scss'
 })
-export class MediaItemDetailsComponent {
+export class MediaItemDetailsComponent implements OnInit {
   @Input() mediaType!:MediaType;
   @Input() id!:number;
-  public mediaItem?:IMediaDataResponse;
+  public mediaItem?:IMediaItem;
   public loading?:boolean;
 
   constructor(
+    private mediaService:MediaService,
     private mediaDataService:MediaDataService
-  ) {
-  }
+  ) {}
 
   public ngOnInit():void {
-    console.log('L15 - ngOnInit', this.mediaType, this.id);
     this.loading = true;
     this.mediaDataService.getDetails(this.mediaType, this.id)
       .pipe(finalize(() => {
         this.loading = false;
       }))
       .subscribe({
-        next: (mediaDetails:IMediaDetailsResponse) => {
-          // this.mediaItem = mediaDetails;
-        },
-        // error: this.setError
+        next: (mediaDetails:IMediaResponseItemDetails) => {
+          if(mediaDetails){
+            const mediaData:IMediaItem[] = this.mediaService.parseMediaData([ mediaDetails ], this.mediaType);
+            this.mediaItem = mediaData.length ? mediaData[0] : <any>{};
+          }
+        }
       });
   };
 }
