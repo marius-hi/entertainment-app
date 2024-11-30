@@ -10,13 +10,13 @@ import { TMDB_API_HOST } from '../../app.settings';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class AuthInterceptor<T> implements HttpInterceptor {
   constructor(
     private authService:AuthService
   ) {
   }
 
-  intercept(httpRequest:HttpRequest<any>, next:HttpHandler):Observable<HttpEvent<any>> {
+  intercept(httpRequest:HttpRequest<T>, next:HttpHandler):Observable<HttpEvent<T>> {
     const hasAuthorisationToken:boolean = httpRequest.headers.has('Authorization');
     const isTMDBUrl:boolean = httpRequest.url.startsWith(TMDB_API_HOST);
     const token:string | null = this.authService.token; // Replace this with your dynamic token retrieval logic

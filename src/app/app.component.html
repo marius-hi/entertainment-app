@@ -2,8 +2,10 @@
   <header-navigation [mediaType]="mediaType" [searchTerm]="searchTerm"></header-navigation>
 }
 <main>
-  <search-results [mediaType]="mediaType" [searchTerm]="searchTerm"></search-results>
-  @if (!searchTerm) {
-    <router-outlet />
-  }
+  <div class="container mt-5">
+    <search-results [mediaType]="mediaType" [searchTerm]="searchTerm"></search-results>
+    @if (!searchTerm) {
+      <router-outlet />
+    }
+  </div>
 </main>

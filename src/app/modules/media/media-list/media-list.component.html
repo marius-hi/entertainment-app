@@ -1,13 +1,19 @@
-<div class="container mt-5">
   <div class="row">
-    @for (item of items; track item.id) {
-      <div [classList]="gridColumnClass">
-        <media-item [item]="item"></media-item>
+    @if (!errorMessage){
+      @for (item of items; track item.id) {
+        <div [classList]="gridColumnClass">
+          <media-item [item]="item"></media-item>
+        </div>
+        } @empty {
+          @if (!loading) {
+            <div class="alert alert-warning" role="alert">
+              No media items found
+            </div>
+          }
+      }
+    } @else {
+      <div class="alert alert-danger" role="alert">
+        <span [outerHTML]="errorMessage"></span>
       </div>
-      } @empty {
-        @if (!loading) {
-          There are no media items.
-        }
     }
-    </div>
 </div>

@@ -33,32 +33,32 @@ export interface IMediaResponseItem {
 }
 
 export interface IMediaResponseItemDetails extends IMediaResponseItem {
-  belongs_to_collection: {
-    backdrop_path:string;
-    id:number;
-    name:string;
-    poster_path:string;
+  belongs_to_collection?: {
+    backdrop_path?:string;
+    id?:number;
+    name?:string;
+    poster_path?:string;
   };
-  budget:number;
-  genres: {
+  budget?:number;
+  genres?: {
     id:number;
     name:string;
   }[];
-  homepage:string;
-  imdb_id:string;
-  production_companies: {
+  homepage?:string;
+  imdb_id?:string;
+  production_companies?: {
     id:number;
     logo_path:string;
   };
-  revenue:number;
-  runtime:number;
-  spoken_languages: {
+  revenue?:number;
+  runtime?:number;
+  spoken_languages?: {
     iso_639_1:string;
     name:string;
   }[];
-  status:string;
-  tagline:string;
-  videos: {
+  status?:string;
+  tagline?:string;
+  videos?: {
     id:string;
   }
   number_of_episodes?:number;

@@ -15,17 +15,18 @@ export class MediaListComponent {
   @Input() public items!:IMediaItem[];
   @Input() mediaType!:MediaType;
   @Input() loading!:boolean;
-  public columns:number = GRID_COLUMNS;
+  @Input() errorMessage?:string;
+  private columns:number = GRID_COLUMNS;
 
   public get gridColumnClass():string {
     // determine bootstrap cols class based on the selected number of columns
-    let gridColumnClassId:number;
-    switch(GRID_COLUMNS){
-      case 2: gridColumnClassId = 6; break;
-      case 3: gridColumnClassId = 4; break;
-      case 4: gridColumnClassId = 3; break;
-      case 6: gridColumnClassId = 2; break;
-      default: gridColumnClassId = 3;
+    let gridColumnClassId:string;
+    switch(this.columns){
+      case 2: gridColumnClassId = '6'; break;
+      case 3: gridColumnClassId = '4'; break;
+      case 4: gridColumnClassId = '3'; break;
+      case 6: gridColumnClassId = '2'; break;
+      default: gridColumnClassId = '3';
     }
     return `mb-5 col-md-${gridColumnClassId}`;
   }

@@ -1,4 +1,4 @@
 <div class="top-rated-media" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" [scrollWindow]="true">
-  <media-list [items]="mediaItems" [mediaType]="mediaType" [loading]="loading()" />
+  <media-list [items]="mediaItems" [mediaType]="mediaType" [loading]="loading()" [errorMessage]="errorMessage()" />
   <loading-spinner [loading]="loading()" />
 </div>

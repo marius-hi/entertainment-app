@@ -1,9 +1,4 @@
 .card {
-  &__link {
-    display: contents;
-    cursor: pointer;
-  }
-
   &__header {
     display: flex;
     flex-direction: row-reverse;
@@ -18,11 +13,29 @@
     }
   }
 
+  &__content {
+    padding: 0;
+
+    &__link {
+      display: contents;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        border-top-left-radius: 14px 10px;
+        border-top-right-radius: 14px 10px;
+      }
+    }
+  }
+
   &__footer {
     &__title {
       padding: 10px;
       font-size: 20px;
       color: var(--mat-sys-primary);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       &__link {
         text-decoration: none;

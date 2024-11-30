@@ -6,7 +6,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 This is an Angular web application that displays the top 10 rated TV shows and top 10 Movies leveraging data from The Movie Database (TMDB) API. <br />It includes a search function for both and a detailed view for individual items.
 ### Notes
 - Responsive design
-- Application is easily themed with Angular Materials (see styles.scss to change the theme)
+- Application is easily themed with Angular Materials (see styles.scss to change the theme - only light mode)
 - Style classes use SCSS with BEM syntax
 - For the state management uses Angular services with RxJS
 - Each page has its own route
@@ -19,7 +19,8 @@ This is an Angular web application that displays the top 10 rated TV shows and t
 - Some default choices/numbers configurable (see app.settings.ts)
 
 ## How to run the application
-Run using NodeJs v22.11.0
+Make sure that on your setup have installed [NodeJs](https://nodejs.org/en/download/package-manager) and [angular-cli](https://angular.dev/tools/cli/setup-local).<br >
+The application was tested on NodeJs v22.11.0, with the following light material themes: `mat.$azure-palette`, `mat.$green-palette`, `mat.$rose-palette` or `mat.$rose-palette`.
 
 ```bash
 npm i

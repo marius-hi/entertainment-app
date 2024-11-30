@@ -1,12 +1,13 @@
-import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, map, Observable } from 'rxjs';
+import { finalize, map, Observable, Subject, takeUntil } from 'rxjs';
 import { IMediaResponseData, IMediaResponseItem, MediaDataService } from '../media-data.service';
-import { MediaType, SCROLL_DISTANCE, SCROLL_THROTTLE } from '../../../app.settings';
+import { MediaType, SCROLL_DISTANCE, SCROLL_THROTTLE, SEARCH_START_MIN_CHARACTERS } from '../../../app.settings';
 import { IMediaItem, MediaService } from '../media.service';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { MediaListComponent } from '../media-list/media-list.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { ErrorPrefix, MessageService } from '../../../shared/services/message.service';
 
 @Component({
   selector: 'search-results',
@@ -17,12 +18,13 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
   ],
   providers: [
     MediaService,
-    MediaDataService
+    MediaDataService,
+    MessageService
   ],
   standalone: true,
   templateUrl: './search-results.component.html'
 })
-export class SearchResultsComponent implements OnChanges {
+export class SearchResultsComponent implements OnChanges, OnDestroy {
   @Input() mediaType!:MediaType;
   @Input() searchTerm?:string;
 
@@ -31,11 +33,15 @@ export class SearchResultsComponent implements OnChanges {
   private page:WritableSignal<number> = signal(1);
   public scrollDistance:number = SCROLL_DISTANCE;
   public throttle:number = SCROLL_THROTTLE;
+  public errorMessage:WritableSignal<string|undefined> = signal(undefined);
+  public searchTermMinCharacters:number = SEARCH_START_MIN_CHARACTERS;
+  public searchUnsubscribe$:Subject<IMediaResponseData|undefined> = new Subject<IMediaResponseData|undefined>();
 
   constructor(
     private router:Router,
     private mediaService:MediaService,
-    private mediaDataService:MediaDataService
+    private mediaDataService:MediaDataService,
+    private messageService:MessageService
   ) {}
 
   public ngOnChanges(changes:SimpleChanges) {
@@ -52,8 +58,9 @@ export class SearchResultsComponent implements OnChanges {
     if (changes['searchTerm']) {
       this.searchTerm = changes['searchTerm'].currentValue;
       this.mediaItems = []; // clear previous items
+      this.errorMessage.set(undefined);
 
-      if(this.searchTerm) {
+      if(this.searchTerm && this.searchTerm?.length >= this.searchTermMinCharacters) {
         this.startSearch();
       }
     }
@@ -68,15 +75,28 @@ export class SearchResultsComponent implements OnChanges {
 
     searchSubscription
       .pipe(
-        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results)
+        takeUntil(this.searchUnsubscribe$),
+        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results),
       )
-      .subscribe((IMediaResponseItem:IMediaResponseItem[]) => {
-        this.mediaItems = (this.mediaItems || []).concat(this.mediaService.parseMediaData(IMediaResponseItem, this.mediaType));
+      .subscribe({
+        next: (IMediaResponseItem:IMediaResponseItem[]) => {
+          this.mediaItems = (this.mediaItems || []).concat(this.mediaService.parseMediaData(IMediaResponseItem, this.mediaType));
+        },
+        error: (error:ErrorEvent) => {
+          this.errorMessage.set(this.messageService.formatError(error, ErrorPrefix.SEARCHING_DATA));
+        }
       });
   }
 
   public onScrollDown(): void {
     this.page.set(this.page() + 1);
     this.startSearch(this.page());
+  }
+
+  public ngOnDestroy():void {
+    this.searchUnsubscribe$.next(undefined);
+    this.searchUnsubscribe$.complete();
+
+    this.mediaItems = [];
   }
 }

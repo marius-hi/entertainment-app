@@ -62,8 +62,7 @@ export class SearchBoxComponent implements OnInit, OnChanges, OnDestroy {
           this.router.navigate([]);
         }
 
-        // perform search when min 3 characters
-        if(searchTerm?.length >= SEARCH_START_MIN_CHARACTERS){
+        if(searchTerm?.length){
           this.addSearchTermToQuery(searchTerm);
         }
       });

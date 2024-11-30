@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MediaType, TMDB_IMAGE_PATH } from '../../app.settings';
-import { IMediaResponseItemDetails } from './media-data.service';
+import { DEFAULT_COVER, MediaType, TMDB_IMAGE_PATH } from '../../app.settings';
+import { IMediaResponseItem, IMediaResponseItemDetails } from './media-data.service';
 
 interface IMediaItemDetails {
   description:string;
@@ -25,27 +25,28 @@ export interface IMediaItem extends IMediaItemDetails {
   length?:number
 }
 
+type MediaResponse = IMediaResponseItemDetails & IMediaResponseItem;
+
 @Injectable()
 export class MediaService {
-  public parseMediaData(mediaItems:any[], mediaType:MediaType):IMediaItem[] {
-    const parseFn:Function = this.getParseFn(mediaType);
+  public parseMediaData(mediaItems:IMediaResponseItemDetails[]|IMediaResponseItem[], mediaType:MediaType):IMediaItem[] {
     const items:IMediaItem[] = [];
     mediaItems
-      .forEach((mediaItem:IMediaResponseItemDetails) => {
-        items.push(parseFn(mediaItem));
+      .forEach((mediaItem:MediaResponse) => {
+        items.push(this.getParseFn(mediaItem, mediaType));
       });
     return items;
   }
 
-  private parseMovieItem(movieData:IMediaResponseItemDetails):IMediaItem {
+  private parseMovieItem(movieData:MediaResponse):IMediaItem {
     return {
       id: movieData.id,
       title: movieData.title,
       subtitle: movieData.release_date,
       rating: movieData.vote_average,
-      image: `${TMDB_IMAGE_PATH}/${movieData.poster_path}`,
+      image: movieData.poster_path ? `${TMDB_IMAGE_PATH}/${movieData.poster_path}` : DEFAULT_COVER,
       urlPageDetail: `/movie/detail/${movieData.id}`,
-      //
+      // --
       description: movieData.overview,
       length: movieData.runtime,
       genres: movieData.genres,
@@ -55,13 +56,13 @@ export class MediaService {
     };
   }
 
-  private parseTVShowItem(tvShowData:IMediaResponseItemDetails):IMediaItem {
+  private parseTVShowItem(tvShowData:MediaResponse):IMediaItem {
     return {
       id: tvShowData.id,
       title: tvShowData.name,
       subtitle: tvShowData.first_air_date,
       rating: tvShowData.vote_average,
-      image: `${TMDB_IMAGE_PATH}/${tvShowData.poster_path}`,
+      image: tvShowData.poster_path ? `${TMDB_IMAGE_PATH}/${tvShowData.poster_path}` : DEFAULT_COVER,
       urlPageDetail: `/tv-show/detail/${tvShowData.id}`,
       // --
       description: tvShowData.overview,
@@ -75,16 +76,12 @@ export class MediaService {
     };
   }
 
-  private getParseFn(mediaType:MediaType):Function {
-    let parseFn:Function;
+  private getParseFn(mediaItem:MediaResponse, mediaType:MediaType):IMediaItem {
     switch (mediaType){
       case MediaType.MOVIE:
-        parseFn = this.parseMovieItem;
-        break;
+        return this.parseMovieItem(mediaItem);
       case MediaType.TV_SHOW:
-        parseFn = this.parseTVShowItem;
-        break;
+        return this.parseTVShowItem(mediaItem);
     }
-    return parseFn;
   }
 }

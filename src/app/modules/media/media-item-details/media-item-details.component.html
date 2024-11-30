@@ -1,5 +1,5 @@
-@if (!loading()) {
-  <div class="container mt-5">
+@if (!errorMessage()) {
+  @if (!loading()) {
     <h4>Details</h4>
     <div class="row">
       <div class="col-md-4">
@@ -45,8 +45,15 @@
 
       </div>
     </div>
-  </div>
-} @else {
-  <loading-spinner [loading]="loading()"></loading-spinner>
+  } @else {
+    <loading-spinner [loading]="loading()"></loading-spinner>
+  }
 }
 
+@if(errorMessage()) {
+  <div class="row">
+    <div class="alert alert-danger" role="alert">
+      <span [outerHTML]="errorMessage()"></span>
+    </div>
+  </div>
+}

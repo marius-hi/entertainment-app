@@ -96,7 +96,7 @@ export class WizardComponent implements OnInit {
       });
   }
 
-  public get token():null | AbstractControl<any, any> {
-    return this.wizardForm.get('token');
+  public get token():null | AbstractControl {
+    return this.wizardForm.get('token') || null;
   }
 }

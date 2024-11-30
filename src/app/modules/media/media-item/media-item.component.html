@@ -4,12 +4,14 @@
       <fa-icon [icon]="faStar"></fa-icon> {{ item?.rating | number: '1.1-2' }}
     </mat-chip>
   </mat-card-header>
-  <a (click)="onClick(item)" class="card__link">
-    <img mat-card-image [src]="item?.image" [alt]="item?.title" [title]="item?.title">
-  </a>
+  <mat-card-content class="card__content">
+    <a (click)="onClick(item)" (keydown.enter)="onClick(item)" class="card__content__link" tabindex="-1">
+      <img mat-card-image [src]="item?.image" [alt]="item?.title" [title]="item?.title">
+    </a>
+  </mat-card-content>
   <mat-card-footer class="card__footer">
     <mat-card-title class="card__footer__title">
-      <a (click)="onClick(item)" class="card__footer__title__link">
+      <a (click)="onClick(item)" (keydown.enter)="onClick(item)" class="card__footer__title__link" tabindex="-1">
         <span>{{ item?.title }}</span>
       </a>
     </mat-card-title>
