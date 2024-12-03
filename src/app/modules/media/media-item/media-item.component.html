@@ -1,8 +1,10 @@
 <mat-card class="card" appearance="outlined">
   <mat-card-header class="card__header">
-    <mat-chip class="card__header__rating" title="Rating">
-      <fa-icon [icon]="faStar"></fa-icon> {{ item?.rating | number: '1.1-2' }}
-    </mat-chip>
+    @if(!hideRating){
+      <mat-chip class="card__header__rating" title="Rating">
+        <fa-icon [icon]="faStar"></fa-icon> {{ item?.rating | number: '1.1-2' }}
+      </mat-chip>
+    }
   </mat-card-header>
   <mat-card-content class="card__content">
     <a (click)="onClick(item)" (keydown.enter)="onClick(item)" class="card__content__link" tabindex="-1">

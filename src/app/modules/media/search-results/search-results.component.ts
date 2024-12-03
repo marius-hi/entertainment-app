@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, map, Observable, Subject, takeUntil } from 'rxjs';
+import { finalize, map, Subject, takeUntil } from 'rxjs';
 import { IMediaResponseData, IMediaResponseItem, MediaDataService } from '../media-data.service';
 import { MediaType, SCROLL_DISTANCE, SCROLL_THROTTLE, SEARCH_START_MIN_CHARACTERS } from '../../../app.settings';
 import { IMediaItem, MediaService } from '../media.service';
@@ -50,7 +50,10 @@ export class SearchResultsComponent implements OnChanges, OnDestroy {
       this.mediaType = changes['mediaType'].currentValue;
       if(changes['mediaType'].previousValue && changes['mediaType'].previousValue !== changes['mediaType'].currentValue) {
         this.mediaItems = [];
-        this.startSearch();
+
+        if(this.searchTerm) {
+          this.startSearch();
+        }
       }
     }
 
@@ -68,15 +71,13 @@ export class SearchResultsComponent implements OnChanges, OnDestroy {
 
   private startSearch(page?:number):void {
     this.loading.set(true);
-    const searchSubscription:Observable<IMediaResponseData> = this.mediaDataService.searchMedia(this.searchTerm?.trim() || '', this.mediaType, page)
-      .pipe(finalize(() => {
-        this.loading.set(false);
-      }));
-
-    searchSubscription
+    this.mediaDataService.searchMedia(this.searchTerm?.trim() || '', this.mediaType, page)
       .pipe(
         takeUntil(this.searchUnsubscribe$),
-        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results),
+        finalize(() => {
+          this.loading.set(false);
+        }),
+        map((mediaResponseData:IMediaResponseData) => mediaResponseData.results)
       )
       .subscribe({
         next: (IMediaResponseItem:IMediaResponseItem[]) => {

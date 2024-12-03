@@ -6,6 +6,7 @@ import { MediaItemComponent } from '../media-item/media-item.component';
 import { IMediaResponseItemDetails, MediaDataService } from '../media-data.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { ErrorPrefix, MessageService } from '../../../shared/services/message.service';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'media-item-details',
@@ -16,9 +17,11 @@ import { ErrorPrefix, MessageService } from '../../../shared/services/message.se
   ],
   standalone: true,
   templateUrl: './media-item-details.component.html',
+  styleUrl: './media-item-details.component.scss',
   imports: [
     MediaItemComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    DecimalPipe
   ]
 })
 export class MediaItemDetailsComponent implements OnInit, OnDestroy {

@@ -1,21 +1,28 @@
 @if (!errorMessage()) {
   @if (!loading()) {
     <h4>Details</h4>
-    <div class="row">
-      <div class="col-md-4">
-        <media-item [item]="mediaItem"></media-item>
+    <div class="row item">
+      <div class="col-md-4 mt-4 mt-md-1">
+        <media-item [item]="mediaItem" [hideRating]="true"></media-item>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-8 mt-4 mt-md-0 item__details">
         <p>
           <span class="fw-bold">Description</span>: {{ mediaItem?.description }}
         </p>
-        @if (mediaItem?.length) {
-          <span class="fw-bold">Length</span>: {{ mediaItem?.length }}
-        }
+
+        <p>
+          <span class="fw-bold">Rating</span>: {{ mediaItem?.rating | number: '1.1-2' }}
+        </p>
 
         <p>
           <span class="fw-bold">Votes</span>: {{ mediaItem?.votes }}
         </p>
+
+        @if (mediaItem?.length) {
+          <p>
+            <span class="fw-bold">Length</span>: {{ mediaItem?.length }}
+          </p>
+        }
 
         <p>
           <span class="fw-bold">Popularity</span>: {{ mediaItem?.popularity }}

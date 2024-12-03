@@ -22,6 +22,7 @@ import { IMediaItem } from '../media.service';
 })
 export class MediaItemComponent {
   @Input() public item!:IMediaItem|undefined;
+  @Input() public hideRating?:boolean;
   protected readonly faStar:IconDefinition = faStar;
 
   constructor(
